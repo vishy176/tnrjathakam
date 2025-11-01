@@ -50,7 +50,10 @@ const JathakamForm = () => {
     // Additional fields
     kuladoshamBride: 'ఉన్నది',
     kuladoshamGroom: 'ఉన్నది',
-    remarks: ''
+    remarks: '',
+    
+    // PDF Language preference
+    pdfLanguage: 'telugu' // 'telugu' or 'english'
   })
 
   const [isGenerating, setIsGenerating] = useState(false)
@@ -87,7 +90,7 @@ const JathakamForm = () => {
   const shareToWhatsApp = async () => {
     try {
       setIsGenerating(true)
-      const pdfBlob = await generatePDF(formData, calculateTotal())
+      const pdfBlob = await generatePDF(formData, calculateTotal(), formData.pdfLanguage)
       
       // Create a URL for the blob
       const url = URL.createObjectURL(pdfBlob)
@@ -495,6 +498,25 @@ const JathakamForm = () => {
                 placeholder="ఏదైనా అదనపు వివరములు..."
                 rows="3"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* PDF Language Selection */}
+        <div className="form-section">
+          <div className="section-title">PDF భాష ఎంపిక (PDF Language Selection)</div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>PDF ఏ భాషలో కావాలి? (Select PDF Language)</label>
+              <select 
+                value={formData.pdfLanguage} 
+                onChange={(e) => handleInputChange('pdfLanguage', e.target.value)}
+                style={{ fontSize: '14px', padding: '10px' }}
+              >
+                <option value="telugu">📄 తెలుగు (Telugu)</option>
+                <option value="english">📄 English</option>
+                <option value="both">📄 రెండూ (Both Telugu & English)</option>
+              </select>
             </div>
           </div>
         </div>
