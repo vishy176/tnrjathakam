@@ -455,11 +455,81 @@ const createPDFHTML = (formData, totalScore, language) => {
   `
 }
 
+// Helper function to load image and convert to base64
+const loadImageAsBase64 = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width
+        canvas.height = img.height
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0)
+        const base64 = canvas.toDataURL('image/png')
+        resolve(base64)
+      } catch (error) {
+        reject(error)
+      }
+    }
+    img.onerror = () => {
+      console.warn(`Failed to load image: ${src}`)
+      resolve(null) // Return null if image fails to load
+    }
+    // Use absolute path - handle both dev and production
+    let fullPath
+    if (src.startsWith('/')) {
+      // In production (GitHub Pages), base is /tnrjathakam/
+      // In development, base is /
+      const basePath = import.meta.env.BASE_URL || '/'
+      const cleanSrc = src.startsWith(basePath) ? src : `${basePath}${src.substring(1)}`
+      fullPath = `${window.location.origin}${cleanSrc}`
+    } else {
+      fullPath = src
+    }
+    img.src = fullPath
+  })
+}
+
 export const generatePDF = async (formData, totalScore, language = 'telugu') => {
   return new Promise(async (resolve, reject) => {
     try {
+      // Preload all images and convert to base64
+      const imagePaths = [
+        '/images/ganesha.png',
+        '/images/lakshmi-vishnu.png',
+        '/images/venkateswara.png'
+      ]
+      
+      const imageMap = {}
+      await Promise.all(
+        imagePaths.map(async (path) => {
+          const base64 = await loadImageAsBase64(path)
+          if (base64) {
+            imageMap[path] = base64
+            console.log(`✅ Image loaded: ${path}`)
+          } else {
+            console.warn(`⚠️ Image failed to load: ${path}`)
+          }
+        })
+      )
+      
+      console.log(`📸 Loaded ${Object.keys(imageMap).length} images`)
+      
       // Create HTML content
-      const htmlContent = createPDFHTML(formData, totalScore, language)
+      let htmlContent = createPDFHTML(formData, totalScore, language)
+      
+      // Replace image paths with base64 data URLs
+      Object.keys(imageMap).forEach(path => {
+        const base64 = imageMap[path]
+        if (base64) {
+          htmlContent = htmlContent.replace(
+            new RegExp(`src="${path.replace('/', '\\/')}"`, 'g'),
+            `src="${base64}"`
+          )
+        }
+      })
       
       // Create a temporary div with the HTML
       const tempDiv = document.createElement('div')
@@ -470,17 +540,33 @@ export const generatePDF = async (formData, totalScore, language = 'telugu') => 
       tempDiv.style.width = '210mm' // A4 width
       document.body.appendChild(tempDiv)
       
-      // Wait for fonts to load
-      await new Promise(resolve => setTimeout(resolve, 500))
+      // Wait for all images to load
+      const images = tempDiv.querySelectorAll('img')
+      await Promise.all(
+        Array.from(images).map(img => {
+          if (img.complete) return Promise.resolve()
+          return new Promise((resolve) => {
+            img.onload = resolve
+            img.onerror = resolve // Continue even if image fails
+            // Timeout after 2 seconds
+            setTimeout(resolve, 2000)
+          })
+        })
+      )
+      
+      // Wait a bit more for rendering
+      await new Promise(resolve => setTimeout(resolve, 300))
       
       // Convert HTML to canvas
       const canvas = await html2canvas(tempDiv, {
         scale: 2,
         useCORS: true,
         logging: false,
+        allowTaint: false,
         width: 794, // A4 width in pixels at 96 DPI
         height: 1123, // A4 height in pixels
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        imageTimeout: 5000
       })
       
       // Remove temp div
