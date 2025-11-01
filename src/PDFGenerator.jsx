@@ -4,11 +4,11 @@ import html2canvas from 'html2canvas'
 // Language text mappings
 const TEXT = {
   telugu: {
-    title1: 'శుభములు',
-    title2: 'శ్రీ తిరుమలై రామారావు',
-    title3: 'కల్యాణములు',
+    title1: 'శుభమస్తు!!',
+    title2: '!!జై శ్రీమన్నారయణ!!',
+    title3: 'కళ్యాణమస్తు!!',
     mainTitle: 'వధూ-వర',
-    subtitle: 'గుణమేళన జాతక పంథతిన వివరము',
+    subtitle: 'గుణమేళన జాతక పొంతన వివరణ',
     bride: 'అమ్మాయి:',
     groom: 'అబ్బాయి:',
     brideDetails: 'అమ్మాయి నక్షత్రం రాశి పాదములు:',
@@ -124,6 +124,25 @@ const createPDFHTML = (formData, totalScore, language) => {
         .header {
           text-align: center;
           margin-bottom: 8mm;
+          position: relative;
+        }
+        .header-images {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 3mm;
+        }
+        .header-image-left {
+          width: 25mm;
+          height: auto;
+        }
+        .header-image-right {
+          display: flex;
+          gap: 5mm;
+        }
+        .header-image-right img {
+          width: 20mm;
+          height: auto;
         }
         .header-top {
           font-size: 9pt;
@@ -243,12 +262,42 @@ const createPDFHTML = (formData, totalScore, language) => {
           font-weight: bold;
           font-size: 11pt;
         }
+        /* Image styles - you can customize size here */
+        .pdf-image {
+          max-width: 100%;
+          height: auto;
+          display: block;
+        }
+        .pdf-image-small {
+          width: 20mm;
+          height: auto;
+        }
+        .pdf-image-medium {
+          width: 30mm;
+          height: auto;
+        }
+        .pdf-image-large {
+          width: 50mm;
+          height: auto;
+        }
       </style>
     </head>
     <body>
       <div class="border">
         <div class="inner-border">
           <div class="header">
+            <!-- Deity Images Section - Add your images here -->
+            <div class="header-images">
+              <!-- Left side image (e.g., Ganesha) -->
+              <img src="/images/ganesha.png" alt="Ganesha" class="header-image-left" onerror="this.style.display='none'">
+              
+              <!-- Right side images (e.g., Lakshmi-Vishnu, Venkateswara) -->
+              <div class="header-image-right">
+                <img src="/images/lakshmi-vishnu.png" alt="Lakshmi Vishnu" class="pdf-image-small" onerror="this.style.display='none'">
+                <img src="/images/venkateswara.png" alt="Venkateswara" class="pdf-image-small" onerror="this.style.display='none'">
+              </div>
+            </div>
+            
             <div class="header-top">
               <span class="red">${lang.title1}</span>
               <span class="blue" style="margin: 0 20px;">${lang.title2}</span>
