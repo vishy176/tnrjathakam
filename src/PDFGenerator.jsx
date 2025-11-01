@@ -9,213 +9,317 @@ export const generatePDF = async (formData, totalScore) => {
         format: 'a4'
       })
 
-      // Set default font
-      doc.setFont('helvetica')
-      
       // Page dimensions
       const pageWidth = doc.internal.pageSize.getWidth()
       const pageHeight = doc.internal.pageSize.getHeight()
-      const margin = 15
+      const margin = 12
       
-      // Draw border
-      doc.setLineWidth(0.5)
+      // Draw outer border (blue)
+      doc.setLineWidth(0.8)
       doc.setDrawColor(42, 90, 160)
-      doc.rect(margin - 5, margin - 5, pageWidth - 2 * (margin - 5), pageHeight - 2 * (margin - 5), 'S')
+      doc.rect(margin - 2, margin - 2, pageWidth - 2 * (margin - 2), pageHeight - 2 * (margin - 2), 'S')
       
+      // Draw inner border
       doc.setLineWidth(0.3)
-      doc.rect(margin - 3, margin - 3, pageWidth - 2 * (margin - 3), pageHeight - 2 * (margin - 3), 'S')
+      doc.setDrawColor(42, 90, 160)
+      doc.rect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin, 'S')
 
-      let yPos = margin + 5
+      let yPos = margin + 10
 
-      // Header
-      doc.setFontSize(16)
-      doc.setTextColor(196, 30, 58)
-      doc.text('Sri Ganesaya Namah', pageWidth / 2, yPos, { align: 'center' })
+      // === HEADER SECTION ===
+      
+      // Top small text (Shubhamulu / Telugu / Kalyanamulu)
+      doc.setFontSize(9)
+      doc.setTextColor(200, 50, 50)
+      doc.text('Shubhamulu', 30, yPos)
+      doc.setTextColor(42, 90, 160)
+      doc.text('Sri Tirumalai Ramarao', pageWidth / 2, yPos, { align: 'center' })
+      doc.setTextColor(200, 50, 50)
+      doc.text('Kalyanamulu', pageWidth - 40, yPos)
       
       yPos += 8
-      doc.setFontSize(14)
-      doc.setTextColor(42, 90, 160)
+
+      // Main title
+      doc.setFontSize(18)
+      doc.setTextColor(196, 30, 58)
+      doc.setFont('helvetica', 'bold')
       doc.text('Vadhu - Vara', pageWidth / 2, yPos, { align: 'center' })
       
       yPos += 7
-      doc.setFontSize(13)
+      doc.setFontSize(14)
+      doc.setTextColor(196, 30, 58)
       doc.text('Gunamelana Jathaka Panthathina Vivaramu', pageWidth / 2, yPos, { align: 'center' })
       
-      yPos += 6
-      doc.setFontSize(10)
-      doc.text('Paddha - Para', pageWidth / 2, yPos, { align: 'center' })
-      
-      yPos += 10
-      doc.setDrawColor(42, 90, 160)
-      doc.line(margin, yPos, pageWidth - margin, yPos)
       yPos += 8
 
-      // Bride Details
-      doc.setFontSize(11)
-      doc.setTextColor(42, 90, 160)
-      doc.setFont('helvetica', 'bold')
-      doc.text('Ammaayi Vivarulu (Bride Details):', margin, yPos)
+      // === BRIDE AND GROOM NAMES ===
       
-      yPos += 6
-      doc.setFontSize(10)
-      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(11)
       doc.setTextColor(0, 0, 0)
-      
-      doc.text(`Penu: ${formData.brideName}`, margin + 5, yPos)
-      doc.text(`Tandri: ${formData.brideFatherName}`, margin + 80, yPos)
-      
-      yPos += 6
-      doc.text(`Nakshatram: ${formData.brideNakshatra}`, margin + 5, yPos)
-      doc.text(`Tedhi: ${formData.brideDate}`, margin + 80, yPos)
-      doc.text(`Samayam: ${formData.brideTime}`, margin + 130, yPos)
-      
-      yPos += 8
-
-      // Groom Details
-      doc.setFontSize(11)
-      doc.setTextColor(42, 90, 160)
-      doc.setFont('helvetica', 'bold')
-      doc.text('Abbaayi Vivarulu (Groom Details):', margin, yPos)
-      
-      yPos += 6
-      doc.setFontSize(10)
       doc.setFont('helvetica', 'normal')
-      doc.setTextColor(0, 0, 0)
       
-      doc.text(`Penu: ${formData.groomName}`, margin + 5, yPos)
-      doc.text(`Tandri: ${formData.groomFatherName}`, margin + 80, yPos)
+      const leftX = margin + 15
+      const rightX = pageWidth - margin - 60
+      
+      // Ammaayi (Bride) label
+      doc.setFont('helvetica', 'bold')
+      doc.text('Ammaayi:', leftX, yPos)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`${formData.brideName}`, leftX + 20, yPos)
+      
+      // Abbaayi (Groom) label  
+      doc.setFont('helvetica', 'bold')
+      doc.text('Abbaayi:', rightX, yPos)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`${formData.groomName}`, rightX + 20, yPos)
       
       yPos += 6
-      doc.text(`Nakshatram: ${formData.groomNakshatra}`, margin + 5, yPos)
-      doc.text(`Tedhi: ${formData.groomDate}`, margin + 80, yPos)
-      doc.text(`Samayam: ${formData.groomTime}`, margin + 130, yPos)
-      
-      yPos += 10
-      doc.setDrawColor(42, 90, 160)
-      doc.line(margin, yPos, pageWidth - margin, yPos)
-      yPos += 8
 
-      // Matching Parameters
-      doc.setFontSize(11)
-      doc.setTextColor(42, 90, 160)
-      doc.setFont('helvetica', 'bold')
-      doc.text('Gunamelana Parakutamulu (Matching Parameters):', margin, yPos)
-      
-      yPos += 8
+      // Bride father name
       doc.setFontSize(9)
-      doc.setFont('helvetica', 'normal')
-      doc.setTextColor(0, 0, 0)
-
-      // Table-like layout for matching parameters
-      const matchingParams = [
-        { name: 'Varnakutamulu', max: 1, obtained: formData.varna.obtained, status: formData.varnaStatus },
-        { name: 'Vashyakutamulu', max: 2, obtained: formData.vashya.obtained, status: formData.vashyaStatus },
-        { name: 'Tarakutamulu', max: 3, obtained: formData.tara.obtained, status: formData.taraStatus },
-        { name: 'Yonikutamulu', max: 4, obtained: formData.yoni.obtained, status: formData.yoniStatus },
-        { name: 'Grahamaitri', max: 5, obtained: formData.graha.obtained, status: formData.grahaStatus },
-        { name: 'Ganakutamulu', max: 6, obtained: formData.gana.obtained, status: formData.ganaStatus },
-        { name: 'Rashikutamulu', max: 7, obtained: formData.rashi.obtained, status: formData.rashiStatus },
-        { name: 'Nadikutamulu', max: 8, obtained: formData.nadi.obtained, status: formData.nadiStatus }
-      ]
-
-      matchingParams.forEach((param, index) => {
-        const row = Math.floor(index / 2)
-        const col = index % 2
-        const xPos = margin + 5 + (col * 90)
-        const currentY = yPos + (row * 6)
-        
-        doc.text(`${param.name}`, xPos, currentY)
-        doc.text(`- ${param.max}/${param.obtained || '0'}`, xPos + 45, currentY)
-        
-        if (param.status === 'ఉన్నది' || param.status.includes('unnadi')) {
-          doc.setTextColor(0, 128, 0)
-          doc.text('✓', xPos + 65, currentY)
-        } else {
-          doc.setTextColor(255, 0, 0)
-          doc.text('✗', xPos + 65, currentY)
-        }
-        doc.setTextColor(0, 0, 0)
-      })
-
-      yPos += 30
-
-      // Total Score
-      doc.setFillColor(103, 126, 234)
-      doc.rect(margin, yPos - 5, pageWidth - 2 * margin, 10, 'F')
-      doc.setFontSize(12)
-      doc.setTextColor(255, 255, 255)
-      doc.setFont('helvetica', 'bold')
-      doc.text(`Motham Gunamulu: ${totalScore} / 36`, pageWidth / 2, yPos, { align: 'center' })
+      doc.text(`${formData.brideFatherName || 'Tandri peru'}`, leftX, yPos)
       
-      yPos += 12
-      doc.setFont('helvetica', 'normal')
-      doc.setTextColor(0, 0, 0)
-
-      // Other Details
-      doc.setFontSize(11)
-      doc.setTextColor(42, 90, 160)
-      doc.setFont('helvetica', 'bold')
-      doc.text('Ithara Vivarulu (Other Details):', margin, yPos)
+      // Groom father name
+      doc.text(`${formData.groomFatherName || 'Tandri peru'}`, rightX, yPos)
       
-      yPos += 6
-      doc.setFontSize(9)
-      doc.setFont('helvetica', 'normal')
-      doc.setTextColor(0, 0, 0)
+      yPos += 8
 
-      if (formData.ganamulu) {
-        doc.text(`Ganamulu: ${formData.ganamulu}`, margin + 5, yPos)
-        yPos += 5
-      }
-      if (formData.sreevarmalu) {
-        doc.text(`Sreevarmalu: ${formData.sreevarmalu}`, margin + 5, yPos)
-        yPos += 5
-      }
-      if (formData.rasimaitri) {
-        doc.text(`Rasimaitri: ${formData.rasimaitri}`, margin + 5, yPos)
-        yPos += 5
-      }
-      if (formData.vedhaChakra) {
-        doc.text(`Jantuveram: ${formData.vedhaChakra}`, margin + 5, yPos)
-        yPos += 5
-      }
-      if (formData.tharabalamu) {
-        doc.text(`Tharabalamu: ${formData.tharabalamu}`, margin + 5, yPos)
-        yPos += 5
-      }
-
-      yPos += 3
-      doc.text(`Kuladoshamu Ammayiki: ${formData.kuladoshamBride}`, margin + 5, yPos)
+      // === BIRTH DETAILS ===
+      
+      doc.setFontSize(10)
+      
+      // Bride details
+      doc.setFont('helvetica', 'bold')
+      doc.text('Ammaayi Nakshatram Raasi Paadamulu:', leftX, yPos)
       yPos += 5
-      doc.text(`Kuladoshamu Abbayiki: ${formData.kuladoshamGroom}`, margin + 5, yPos)
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(9)
+      doc.text(`${formData.brideNakshatra || ''}`, leftX + 5, yPos)
+      
+      yPos += 6
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      // Reset yPos for groom side
+      const tempY = yPos - 11
+      doc.text('Abbaayi Nakshatram Raasi Paadamulu:', rightX, tempY)
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(9)
+      doc.text(`${formData.groomNakshatra || ''}`, rightX + 5, tempY + 5)
+      
+      yPos += 2
+
+      // Birth dates and times
+      doc.setFontSize(9)
+      doc.text(`Janma: ${formData.brideDate || ''} - ${formData.brideTime || ''}`, leftX, yPos)
+      doc.text(`Janma: ${formData.groomDate || ''} - ${formData.groomTime || ''}`, rightX, yPos)
+      
+      yPos += 10
+
+      // Divider line
+      doc.setDrawColor(42, 90, 160)
+      doc.setLineWidth(0.3)
+      doc.line(margin + 5, yPos, pageWidth - margin - 5, yPos)
+      yPos += 8
+
+      // === MATCHING PARAMETERS TABLE ===
+      
+      doc.setFontSize(11)
+      doc.setTextColor(0, 0, 0)
+      doc.setFont('helvetica', 'bold')
+      doc.text('Iruvarila Parakutamulu', margin + 15, yPos)
+      doc.text('Ganamulu', pageWidth / 2 + 20, yPos)
+      
+      yPos += 7
+
+      // Left column - Kootas
+      const kootaX = margin + 15
+      const maxScoreX = kootaX + 45
+      const scoreX = kootaX + 55
+      
+      // Right column - Other parameters
+      const param2X = pageWidth / 2 + 20
+      const value2X = param2X + 45
+      
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+
+      // Varna Koota
+      doc.text('Varnakutamulu', kootaX, yPos)
+      doc.text(`- ${formData.varna.max || 1}/${formData.varna.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.varnaStatus === 'ఉన్నది' ? 0 : 255, formData.varnaStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.varnaStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      
+      // Sreevarmalu
+      doc.text('Sreevarmalu', param2X, yPos)
+      doc.text(`- ${formData.sreevarmalu || '27/11'}`, value2X, yPos)
+      yPos += 6
+
+      // Vashya Koota
+      doc.text('Vashyakutamulu', kootaX, yPos)
+      doc.text(`- ${formData.vashya.max || 2}/${formData.vashya.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.vashyaStatus === 'ఉన్నది' ? 0 : 255, formData.vashyaStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.vashyaStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      
+      // Rasi Maitri
+      doc.text('Raasimaitri', param2X, yPos)
+      doc.text(`- ${formData.rasimaitri || 'Unnadi/Ledu'}`, value2X, yPos)
+      yPos += 6
+
+      // Tara Koota
+      doc.text('Tarakutamulu', kootaX, yPos)
+      doc.text(`- ${formData.tara.max || 3}/${formData.tara.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.taraStatus === 'ఉన్నది' ? 0 : 255, formData.taraStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.taraStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      
+      // Graha Maitri
+      doc.text('Grahamaitri', param2X, yPos)
+      doc.text(`- ${formData.chandraNavamsha || 'Unnadi/Ledu'}`, value2X, yPos)
+      yPos += 6
+
+      // Yoni Koota
+      doc.text('Yonikutamulu', kootaX, yPos)
+      doc.text(`- ${formData.yoni.max || 4}/${formData.yoni.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.yoniStatus === 'ఉన్నది' ? 0 : 255, formData.yoniStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.yoniStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      
+      // Janma Lagna Maitri
+      doc.text('Janmalagnnamaitri', param2X, yPos)
+      doc.text(`- ${formData.papashatra || 'Unnadi/Ledu'}`, value2X, yPos)
+      yPos += 6
+
+      // Graha Maitri
+      doc.text('Grahamaitri', kootaX, yPos)
+      doc.text(`- ${formData.graha.max || 5}/${formData.graha.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.grahaStatus === 'ఉన్నది' ? 0 : 255, formData.grahaStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.grahaStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      
+      // Jantuveramu
+      doc.text('Jantuveram', param2X, yPos)
+      doc.text(`- ${formData.vedhaChakra || 'Anukulam/Kavadu'}`, value2X, yPos)
+      yPos += 6
+
+      // Gana Koota
+      doc.text('Ganakutamulu', kootaX, yPos)
+      doc.text(`- ${formData.gana.max || 6}/${formData.gana.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.ganaStatus === 'ఉన్నది' ? 0 : 255, formData.ganaStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.ganaStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      
+      // Tharabalamu
+      doc.text('Tharabalamu', param2X, yPos)
+      doc.text(`- ${formData.tharabalamu || 'Unnadi/Ledu'}`, value2X, yPos)
+      yPos += 6
+
+      // Rashi Koota
+      doc.text('Rashikutamulu', kootaX, yPos)
+      doc.text(`- ${formData.rashi.max || 7}/${formData.rashi.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.rashiStatus === 'ఉన్నది' ? 0 : 255, formData.rashiStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.rashiStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      
+      // Raashyabhinayetulu
+      doc.text('Raashyabhinayetulu', param2X, yPos)
+      doc.text(`- ${formData.rashnabhinayetulu || 'Chenukovachhu'}`, value2X, yPos)
+      yPos += 6
+
+      // Nadi Koota
+      doc.text('Nadikutamulu', kootaX, yPos)
+      doc.text(`- ${formData.nadi.max || 8}/${formData.nadi.obtained || ''}`, maxScoreX, yPos)
+      doc.setTextColor(formData.nadiStatus === 'ఉన్నది' ? 0 : 255, formData.nadiStatus === 'ఉన్నది' ? 128 : 0, 0)
+      doc.text(formData.nadiStatus === 'ఉన్నది' ? '✓' : '✗', scoreX, yPos)
+      doc.setTextColor(0, 0, 0)
+      yPos += 6
+
+      // === TOTAL SCORE SECTION ===
+      
+      doc.setLineWidth(1)
+      doc.setDrawColor(0, 0, 0)
+      doc.line(kootaX, yPos, scoreX + 5, yPos)
+      yPos += 6
+      
+      doc.setFontSize(12)
+      doc.setFont('helvetica', 'bold')
+      doc.text('36/', kootaX + 20, yPos)
+      doc.setFontSize(14)
+      doc.text(`${totalScore}`, kootaX + 32, yPos)
+      
+      yPos += 2
+
+      // Ganamulu total
+      doc.setFontSize(10)
+      doc.text(`Marusulu - ${formData.ganamulu || '100/120'}`, param2X, yPos - 8)
+      yPos += 6
+
+      // === DOSHAM SECTION ===
+      
+      doc.setFontSize(9)
+      doc.setFont('helvetica', 'normal')
+      doc.text(`Kuladoshamu Ammayiki`, kootaX, yPos)
+      doc.text(`- ${formData.kuladoshamBride || 'Unnadi/Ledu'}`, maxScoreX, yPos)
+      yPos += 5
+      
+      doc.text(`Kuladoshamu Abbayiki`, kootaX, yPos)
+      doc.text(`- ${formData.kuladoshamGroom || 'Unnadi/Ledu'}`, maxScoreX, yPos)
+      yPos += 8
+
+      // === REMARKS SECTION ===
       
       if (formData.remarks) {
-        yPos += 8
-        doc.setFontSize(10)
-        doc.setFont('helvetica', 'bold')
-        doc.text('Gamanikalu (Remarks):', margin, yPos)
-        yPos += 5
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(9)
-        
-        // Split remarks into lines
+        doc.setFontSize(8)
+        doc.setFont('helvetica', 'italic')
         const remarksLines = doc.splitTextToSize(formData.remarks, pageWidth - 2 * margin - 10)
         remarksLines.forEach(line => {
-          doc.text(line, margin + 5, yPos)
-          yPos += 5
+          doc.text(line, margin + 15, yPos)
+          yPos += 4
         })
+        yPos += 5
       }
 
-      // Footer
-      yPos = pageHeight - margin - 15
-      doc.setDrawColor(42, 90, 160)
-      doc.line(margin, yPos, pageWidth - margin, yPos)
-      yPos += 6
+      // === FOOTER SECTION ===
       
-      doc.setFontSize(8)
-      doc.setTextColor(100, 100, 100)
-      doc.text('Generated on: ' + new Date().toLocaleDateString('te-IN'), pageWidth / 2, yPos, { align: 'center' })
+      yPos = pageHeight - margin - 25
+
+      // Red border box for message
+      doc.setDrawColor(196, 30, 58)
+      doc.setLineWidth(0.5)
+      doc.roundedRect(margin + 10, yPos - 5, pageWidth - 2 * margin - 20, 12, 2, 2, 'S')
+      
+      yPos += 2
+      doc.setFontSize(9)
+      doc.setTextColor(196, 30, 58)
+      doc.setFont('helvetica', 'bold')
+      const message = 'Mitrulaku Panicheralu ivvani thaarani ivvandi.'
+      doc.text(message, pageWidth / 2, yPos, { align: 'center' })
       yPos += 4
-      doc.text('Jathaka Melana Vivaramu', pageWidth / 2, yPos, { align: 'center' })
+      doc.setFontSize(8)
+      const message2 = 'Inka meeku vivahadosh prasna unnanu cheyandi.'
+      doc.text(message2, pageWidth / 2, yPos, { align: 'center' })
+      
+      yPos += 10
+
+      // Contact details
+      doc.setFontSize(10)
+      doc.setTextColor(42, 90, 160)
+      doc.setFont('helvetica', 'bold')
+      doc.text('TNR Lagnam Padhavipeduru Nivedana Navveena Vaaru', pageWidth / 2, yPos, { align: 'center' })
+      
+      yPos += 5
+      doc.setFontSize(9)
+      doc.setTextColor(0, 0, 0)
+      doc.text('Seemalu & Sri Kommudru Nagaraaju Sresht S/o. Venapalakayya', pageWidth / 2, yPos, { align: 'center' })
+      
+      yPos += 5
+      doc.setFontSize(11)
+      doc.setTextColor(0, 150, 0)
+      doc.setFont('helvetica', 'bold')
+      doc.text('WhatsApp: 9440 990 134,', pageWidth / 2 - 20, yPos, { align: 'center' })
+      doc.setTextColor(196, 30, 58)
+      doc.text('📱 9299 993 516', pageWidth / 2 + 25, yPos, { align: 'center' })
 
       // Generate blob
       const pdfBlob = doc.output('blob')
@@ -226,4 +330,3 @@ export const generatePDF = async (formData, totalScore) => {
     }
   })
 }
-
