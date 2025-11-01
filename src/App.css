@@ -1,0 +1,285 @@
+:root {
+  --primary-color: #4A90E2;
+  --border-color: #2c5aa0;
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --success-color: #4CAF50;
+  --error-color: #f44336;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  font-size: 16px;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.form-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  text-align: center;
+  color: white;
+}
+
+.form-header h1 {
+  font-size: 20px;
+  margin: 10px 0;
+  font-weight: 600;
+}
+
+.form-header .subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.form-body {
+  padding: 20px;
+}
+
+.form-section {
+  margin-bottom: 25px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.matching-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.matching-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 4px;
+}
+
+.matching-item label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.matching-item input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.matching-item select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.total-score {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 6px;
+  text-align: center;
+  margin: 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: white;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--primary-color);
+}
+
+/* PDF Preview Styles */
+.pdf-preview {
+  display: none;
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}
+
+.pdf-content {
+  width: 794px;
+  background: white;
+  padding: 40px;
+  font-family: 'Noto Sans Telugu', Arial, sans-serif;
+}
+
+.pdf-header {
+  text-align: center;
+  border: 3px double var(--border-color);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.pdf-header h1 {
+  color: #c41e3a;
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.pdf-header h2 {
+  color: var(--primary-color);
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.pdf-details {
+  margin: 20px 0;
+  line-height: 1.8;
+}
+
+.pdf-details table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.pdf-details td {
+  padding: 5px;
+  border: 1px solid #ddd;
+}
+
+.pdf-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid var(--border-color);
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .matching-item {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .form-header h1 {
+    font-size: 18px;
+  }
+}
+
